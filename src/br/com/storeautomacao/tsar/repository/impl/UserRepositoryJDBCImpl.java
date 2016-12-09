@@ -26,21 +26,16 @@ public class UserRepositoryJDBCImpl implements UserRepository {
 
     @Override
     public void create(User entity) {
-
-    }
-
-    @Override
-    public void update(User entity) {
-    }
-
-    @Override
-    public void delete(User entity) {
-        final String selectSql = "DELETE FROM \"user\" WHERE user_id = ?";
-
+        final String command = "INSERT INTO \"user\" (user_id, email, created_at) VALUES (?, ? , ?)";
         try {
             try {
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSql);
-                preparedStatement.setLong(0, entity.getUserId());
+                // Get JDBC connection
+                connection = ConnectionFactory.getConnection();
+
+                PreparedStatement preparedStatement = connection.prepareStatement(command);
+                preparedStatement.setLong(1, entity.getUserId());
+                preparedStatement.setString(2, entity.getEmail());
+                preparedStatement.setDate(3, new java.sql.Date(entity.getCreatedAt().getTime()));
                 preparedStatement.executeQuery();
             } finally {
                 connection.close();
@@ -49,30 +44,73 @@ public class UserRepositoryJDBCImpl implements UserRepository {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    @Override
+    public void update(User entity) {
+        final String command = "UPDATE \"user\" SET user_id = ?, email = ?, created_at = ? WHERE user_id = ?";
+        try {
+            try {
+                // Get JDBC connection
+                connection = ConnectionFactory.getConnection();
+
+                PreparedStatement preparedStatement = connection.prepareStatement(command);
+                preparedStatement.setLong(1, entity.getUserId());
+                preparedStatement.setString(2, entity.getEmail());
+                preparedStatement.setDate(3, new java.sql.Date(entity.getCreatedAt().getTime()));
+                preparedStatement.setLong(4, entity.getUserId());
+                preparedStatement.executeQuery();
+            } finally {
+                connection.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void delete(User entity) {
+        this.deleteById(entity.getUserId());
+    }
+
     @Override
     public void deleteById(Long id) {
-        this.delete(this.findById(id));
-    }    
+        final String command = "DELETE FROM \"user\" WHERE user_id = ?";
+        try {
+            try {
+                // Get JDBC connection
+                connection = ConnectionFactory.getConnection();
+
+                PreparedStatement preparedStatement = connection.prepareStatement(command);
+                preparedStatement.setLong(1, id);
+                preparedStatement.executeQuery();
+            } finally {
+                connection.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
 
     @Override
     public boolean exists(User entity) {
         return this.findById(entity.getUserId()) != null;
     }
-    
+
     @Override
     public User findById(Long id) {
-        final String selectSql = "SELECT user_id, email, created_at FROM \"user\" WHERE user_id = ?";
-
+        final String command = "SELECT user_id, email, created_at FROM \"user\" WHERE user_id = ?";
         ResultSet rs;
         try {
+            // Get JDBC connection
+            connection = ConnectionFactory.getConnection();
 
-            PreparedStatement preparedStatement = connection.prepareStatement(selectSql);
-            preparedStatement.setLong(0, id);
+            PreparedStatement preparedStatement = connection.prepareStatement(command);
+            preparedStatement.setLong(1, id);
             rs = preparedStatement.executeQuery();
             try {
                 while (rs.next()) {
                     User user = new User();
+                    user.setUserId(rs.getLong("user_id"));
                     user.setEmail(rs.getString("email"));
                     user.setCreatedAt(new Date());
                     return user;
@@ -88,9 +126,8 @@ public class UserRepositoryJDBCImpl implements UserRepository {
 
     @Override
     public List<User> listAll() {
-
         // Make SQL query to retrive all users
-        final String selectSql = "SELECT user_id, email, created_at FROM \"user\"";
+        final String command = "SELECT user_id, email, created_at FROM \"user\"";
 
         // Create a new list to return
         List<User> list = new ArrayList<>();
@@ -100,7 +137,7 @@ public class UserRepositoryJDBCImpl implements UserRepository {
             connection = ConnectionFactory.getConnection();
 
             // Get Connection and prepare SQL Query to execute
-            PreparedStatement preparedStatement = connection.prepareStatement(selectSql);
+            PreparedStatement preparedStatement = connection.prepareStatement(command);
 
             // Execute SQL query and get ResultSet with all Users
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -129,20 +166,20 @@ public class UserRepositoryJDBCImpl implements UserRepository {
 
     @Override
     public long count() {
-        
         // Make SQL query to retrive users count
-        final String selectSql = "SELECT COUNT(user_id) FROM \"user\"";
+        final String command = "SELECT COUNT(user_id) FROM \"user\"";
 
         try {
             // Get JDBC connection
             connection = ConnectionFactory.getConnection();
 
             // Get Connection and prepare SQL Query to execute
-            PreparedStatement preparedStatement = connection.prepareStatement(selectSql);
+            PreparedStatement preparedStatement = connection.prepareStatement(command);
 
             // Execute SQL query and get ResultSet with all Users
             ResultSet resultSet = preparedStatement.executeQuery();
-            try {                
+            try {
+                resultSet.next();
                 return resultSet.getLong(1);
             } finally {
                 // Close database connection
@@ -151,6 +188,6 @@ public class UserRepositoryJDBCImpl implements UserRepository {
         } catch (SQLException ex) {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;       
+        return 0;
     }
 }
