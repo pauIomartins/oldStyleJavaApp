@@ -1,6 +1,6 @@
-package br.com.storeautomacao.tsar.repository;
+package br.com.paulorobertomartins.tsar.repository;
 
-import br.com.storeautomacao.tsar.model.User;
+import br.com.paulorobertomartins.tsar.model.User;
 
 import java.util.Date;
 import java.util.List;

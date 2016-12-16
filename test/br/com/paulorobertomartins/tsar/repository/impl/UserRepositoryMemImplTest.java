@@ -1,7 +1,7 @@
-package br.com.storeautomacao.tsar.repository.impl;
+package br.com.paulorobertomartins.tsar.repository.impl;
 
-import br.com.storeautomacao.tsar.repository.UserRepositoryBase;
-import br.com.storeautomacao.tsar.util.MemoryDatabase;
+import br.com.paulorobertomartins.tsar.repository.UserRepositoryBase;
+import br.com.paulorobertomartins.tsar.util.MemoryDatabase;
 
 /**
  *

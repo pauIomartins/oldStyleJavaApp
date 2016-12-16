@@ -1,8 +1,8 @@
-package br.com.storeautomacao.tsar.repository.impl;
+package br.com.paulorobertomartins.tsar.repository.impl;
 
-import br.com.storeautomacao.tsar.model.User;
-import br.com.storeautomacao.tsar.repository.UserRepository;
-import br.com.storeautomacao.tsar.util.ConnectionFactory;
+import br.com.paulorobertomartins.tsar.model.User;
+import br.com.paulorobertomartins.tsar.repository.UserRepository;
+import br.com.paulorobertomartins.tsar.util.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
