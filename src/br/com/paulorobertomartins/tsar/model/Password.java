@@ -10,6 +10,7 @@ import java.util.Objects;
 public class Password {
     
     private Long passwordId;
+    private User user;
     private String password;
     private Boolean active;
     private Date createdAt;
@@ -23,6 +24,14 @@ public class Password {
 
     public void setPasswordId(Long passwordId) {
         this.passwordId = passwordId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getPassword() {
