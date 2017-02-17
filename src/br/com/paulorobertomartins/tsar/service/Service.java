@@ -1,6 +1,5 @@
-package br.com.paulorobertomartins.tsar.repository;
+package br.com.paulorobertomartins.tsar.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -9,7 +8,7 @@ import java.util.List;
  * @param <T> Entity class
  * @param <ID> Entity Id Class
  */
-public interface Repository<T, ID> {
+public interface Service<T, ID> {
 
     public void create(T entity);
     public void update(T entity);

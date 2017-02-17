@@ -27,7 +27,7 @@ public class PasswordRepositoryJDBCImpl extends AbstractJDBCRepository implement
     }
 
     @Override
-    public void create(Password entity) throws SQLException {
+    public void create(Password entity) {
         final String command = "INSERT INTO \"password\" (password_id, \"password\", user_id, created_at, active) VALUES (?, ? , ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -39,12 +39,12 @@ public class PasswordRepositoryJDBCImpl extends AbstractJDBCRepository implement
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(PasswordRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void update(Password entity) throws SQLException {
+    public void update(Password entity) {
         final String command = "UPDATE \"password\" SET \"password\" = ?, user_id = ?, active = ? WHERE password_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -55,17 +55,17 @@ public class PasswordRepositoryJDBCImpl extends AbstractJDBCRepository implement
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(PasswordRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void delete(Password entity) throws SQLException {
+    public void delete(Password entity) {
         this.deleteById(entity.getPasswordId());
     }
 
     @Override
-    public void deleteById(Long id) throws SQLException {
+    public void deleteById(Long id) {
         final String command = "DELETE FROM \"password\" WHERE password_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -73,17 +73,17 @@ public class PasswordRepositoryJDBCImpl extends AbstractJDBCRepository implement
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(PasswordRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public boolean exists(Password entity) throws SQLException {
+    public boolean exists(Password entity) {
         return this.findById(entity.getPasswordId()) != null;
     }
 
     @Override
-    public Password findById(Long id) throws SQLException {
+    public Password findById(Long id) {
         final String command = "SELECT password_id, \"password\", user_id, created_at, active FROM \"password\" WHERE password_id = ?";
         ResultSet resultSet;
         try {
@@ -105,13 +105,13 @@ public class PasswordRepositoryJDBCImpl extends AbstractJDBCRepository implement
             }
         } catch (SQLException ex) {
             Logger.getLogger(PasswordRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return null;
     }
 
     @Override
-    public List<Password> listAll() throws SQLException {
+    public List<Password> listAll() {
         final String command = "SELECT password_id, \"content\", user_id, created_at, update_at FROM \"password\"";
 
         List<Password> list = new ArrayList<>();
@@ -129,13 +129,13 @@ public class PasswordRepositoryJDBCImpl extends AbstractJDBCRepository implement
             }
         } catch (SQLException ex) {
             Logger.getLogger(PasswordRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return list;
     }
 
     @Override
-    public long count() throws SQLException {
+    public long count() {
         final String command = "SELECT COUNT(password_id) FROM \"password\"";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -144,7 +144,7 @@ public class PasswordRepositoryJDBCImpl extends AbstractJDBCRepository implement
             return resultSet.getLong(1);
         } catch (SQLException ex) {
             Logger.getLogger(PasswordRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 }

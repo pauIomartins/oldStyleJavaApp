@@ -28,7 +28,7 @@ public class CommentRepositoryJDBCImpl extends AbstractJDBCRepository implements
     }
 
     @Override
-    public void create(Comment entity) throws SQLException {
+    public void create(Comment entity) {
         final String command = "INSERT INTO \"comment\" (comment_id, \"content\", post_id, user_id, created_at, update_at) VALUES (?, ? , ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -41,12 +41,12 @@ public class CommentRepositoryJDBCImpl extends AbstractJDBCRepository implements
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(CommentRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void update(Comment entity) throws SQLException {
+    public void update(Comment entity) {
         final String command = "UPDATE \"comment\" SET \"content\" = ?, post_id = ?, user_id = ?, update_at = ? WHERE comment_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -58,17 +58,17 @@ public class CommentRepositoryJDBCImpl extends AbstractJDBCRepository implements
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(CommentRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void delete(Comment entity) throws SQLException {
+    public void delete(Comment entity) {
         this.deleteById(entity.getCommentId());
     }
 
     @Override
-    public void deleteById(Long id) throws SQLException {
+    public void deleteById(Long id) {
         final String command = "DELETE FROM \"comment\" WHERE comment_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -77,17 +77,17 @@ public class CommentRepositoryJDBCImpl extends AbstractJDBCRepository implements
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(CommentRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public boolean exists(Comment entity) throws SQLException {
+    public boolean exists(Comment entity) {
         return this.findById(entity.getCommentId()) != null;
     }
 
     @Override
-    public Comment findById(Long id) throws SQLException {
+    public Comment findById(Long id) {
         final String command = "SELECT comment_id, \"content\", post_id, user_id, created_at, update_at FROM \"comment\" WHERE comment_id = ?";
         ResultSet resultSet;
         Comment comment = null;
@@ -107,13 +107,13 @@ public class CommentRepositoryJDBCImpl extends AbstractJDBCRepository implements
             }
         } catch (SQLException ex) {
             Logger.getLogger(CommentRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return comment;
     }
 
     @Override
-    public List<Comment> listAll() throws SQLException {
+    public List<Comment> listAll() {
         final String command = "SELECT comment_id, \"content\", post_id, user_id, created_at, update_at FROM \"comment\"";
 
         List<Comment> list = new ArrayList<>();
@@ -132,13 +132,13 @@ public class CommentRepositoryJDBCImpl extends AbstractJDBCRepository implements
             }
         } catch (SQLException ex) {
             Logger.getLogger(CommentRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return list;
     }
 
     @Override
-    public long count() throws SQLException {
+    public long count() {
         final String command = "SELECT COUNT(comment_id) FROM \"comment\"";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -147,7 +147,7 @@ public class CommentRepositoryJDBCImpl extends AbstractJDBCRepository implements
             return resultSet.getLong(1);
         } catch (SQLException ex) {
             Logger.getLogger(CommentRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 }

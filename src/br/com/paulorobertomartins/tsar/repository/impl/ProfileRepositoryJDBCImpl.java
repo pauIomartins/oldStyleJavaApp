@@ -25,7 +25,7 @@ public class ProfileRepositoryJDBCImpl extends AbstractJDBCRepository implements
     }
 
     @Override
-    public void create(Profile entity) throws SQLException {
+    public void create(Profile entity) {
         final String command = "INSERT INTO profile (user_id, first_name, middle_name, last_name, "
                 + "\"position\", company, update_at, created_at ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
@@ -41,7 +41,7 @@ public class ProfileRepositoryJDBCImpl extends AbstractJDBCRepository implements
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ProfileRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
@@ -66,12 +66,12 @@ public class ProfileRepositoryJDBCImpl extends AbstractJDBCRepository implements
     }
 
     @Override
-    public void delete(Profile entity) throws SQLException {
+    public void delete(Profile entity) {
         this.deleteById(entity.getUser().getUserId());
     }
 
     @Override
-    public void deleteById(Long id) throws SQLException {
+    public void deleteById(Long id) {
         final String command = "DELETE FROM profile WHERE user_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -79,17 +79,17 @@ public class ProfileRepositoryJDBCImpl extends AbstractJDBCRepository implements
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ProfileRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public boolean exists(Profile entity) throws SQLException {
+    public boolean exists(Profile entity) {
         return this.findById(entity.getUser().getUserId()) != null;
     }
 
     @Override
-    public Profile findById(Long id) throws SQLException {
+    public Profile findById(Long id) {
         final String command = "SELECT user_id, first_name, middle_name, last_name, \"position\", company, update_at, created_at  FROM profile WHERE user_id = ?";
         ResultSet resultSet;
         try {
@@ -110,13 +110,13 @@ public class ProfileRepositoryJDBCImpl extends AbstractJDBCRepository implements
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProfileRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return null;
     }
 
     @Override
-    public List<Profile> listAll() throws SQLException {
+    public List<Profile> listAll() {
         final String command = "SELECT user_id, first_name, middle_name, last_name, \"position\", company, update_at, created_at  FROM profile";
 
         List<Profile> list = new ArrayList<>();
@@ -137,13 +137,13 @@ public class ProfileRepositoryJDBCImpl extends AbstractJDBCRepository implements
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProfileRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return list;
     }
 
     @Override
-    public long count() throws SQLException {
+    public long count() {
 
         long result = 0;
         final String command = "SELECT COUNT(user_id) FROM profile";
@@ -154,7 +154,7 @@ public class ProfileRepositoryJDBCImpl extends AbstractJDBCRepository implements
             result = resultSet.getLong(1);
         } catch (SQLException ex) {
             Logger.getLogger(ProfileRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return result;
     }

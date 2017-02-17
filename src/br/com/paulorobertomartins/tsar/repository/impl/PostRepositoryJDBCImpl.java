@@ -25,7 +25,7 @@ public class PostRepositoryJDBCImpl extends AbstractJDBCRepository implements Po
     }
 
     @Override
-    public void create(Post entity) throws SQLException {
+    public void create(Post entity) {
         final String command = "INSERT INTO \"post\" (post_id, \"content\", user_id, created_at, update_at) VALUES (?, ? , ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -37,12 +37,12 @@ public class PostRepositoryJDBCImpl extends AbstractJDBCRepository implements Po
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(PostRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void update(Post entity) throws SQLException {
+    public void update(Post entity) {
         final String command = "UPDATE \"post\" SET \"content\" = ?, user_id = ?, update_at = ? WHERE post_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -53,17 +53,17 @@ public class PostRepositoryJDBCImpl extends AbstractJDBCRepository implements Po
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(PostRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void delete(Post entity) throws SQLException {
+    public void delete(Post entity) {
         this.deleteById(entity.getPostId());
     }
 
     @Override
-    public void deleteById(Long id) throws SQLException {
+    public void deleteById(Long id) {
         final String command = "DELETE FROM \"post\" WHERE post_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -71,17 +71,17 @@ public class PostRepositoryJDBCImpl extends AbstractJDBCRepository implements Po
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(PostRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public boolean exists(Post entity) throws SQLException {
+    public boolean exists(Post entity) {
         return this.findById(entity.getPostId()) != null;
     }
 
     @Override
-    public Post findById(Long id) throws SQLException {
+    public Post findById(Long id) {
         final String command = "SELECT post_id, \"content\", user_id, created_at, update_at FROM \"post\" WHERE post_id = ?";
         ResultSet resultSet;
         try {
@@ -99,13 +99,13 @@ public class PostRepositoryJDBCImpl extends AbstractJDBCRepository implements Po
             }
         } catch (SQLException ex) {
             Logger.getLogger(PostRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return null;
     }
 
     @Override
-    public List<Post> listAll() throws SQLException {
+    public List<Post> listAll() {
         final String command = "SELECT post_id, \"content\", user_id, created_at, update_at FROM \"post\"";
 
         List<Post> list = new ArrayList<>();
@@ -123,13 +123,13 @@ public class PostRepositoryJDBCImpl extends AbstractJDBCRepository implements Po
             }
         } catch (SQLException ex) {
             Logger.getLogger(PostRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return list;
     }
 
     @Override
-    public long count() throws SQLException {
+    public long count() {
         final String command = "SELECT COUNT(post_id) FROM \"post\"";
 
         try {
@@ -139,7 +139,7 @@ public class PostRepositoryJDBCImpl extends AbstractJDBCRepository implements Po
             return resultSet.getLong(1);
         } catch (SQLException ex) {
             Logger.getLogger(PostRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 }

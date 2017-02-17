@@ -21,7 +21,7 @@ public class UserRepositoryJDBCImpl extends AbstractJDBCRepository implements Us
     }
 
     @Override
-    public void create(User entity) throws SQLException {
+    public void create(User entity) {
         final String command = "INSERT INTO \"user\" (user_id, email, created_at) VALUES (?, ? , ?)";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -31,12 +31,12 @@ public class UserRepositoryJDBCImpl extends AbstractJDBCRepository implements Us
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void update(User entity) throws SQLException {
+    public void update(User entity) {
         final String command = "UPDATE \"user\" SET user_id = ?, email = ?, created_at = ? WHERE user_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -47,17 +47,17 @@ public class UserRepositoryJDBCImpl extends AbstractJDBCRepository implements Us
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void delete(User entity) throws SQLException {
+    public void delete(User entity) {
         this.deleteById(entity.getUserId());
     }
 
     @Override
-    public void deleteById(Long id) throws SQLException {
+    public void deleteById(Long id) {
         final String command = "DELETE FROM \"user\" WHERE user_id = ?";
         try {
             PreparedStatement preparedStatement = this.connectionManager.getPreparedStatement(command);
@@ -65,17 +65,17 @@ public class UserRepositoryJDBCImpl extends AbstractJDBCRepository implements Us
             preparedStatement.execute();
         } catch (SQLException ex) {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public boolean exists(User entity) throws SQLException {
+    public boolean exists(User entity) {
         return this.findById(entity.getUserId()) != null;
     }
 
     @Override
-    public User findById(Long id) throws SQLException {
+    public User findById(Long id) {
         final String command = "SELECT user_id, email, created_at FROM \"user\" WHERE user_id = ?";
         ResultSet rs;
         try {
@@ -91,13 +91,13 @@ public class UserRepositoryJDBCImpl extends AbstractJDBCRepository implements Us
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return null;
     }
 
     @Override
-    public List<User> listAll() throws SQLException {
+    public List<User> listAll() {
         final String command = "SELECT user_id, email, created_at FROM \"user\"";
 
         List<User> list = new ArrayList<>();
@@ -113,13 +113,13 @@ public class UserRepositoryJDBCImpl extends AbstractJDBCRepository implements Us
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
         return list;
     }
 
     @Override
-    public long count() throws SQLException {
+    public long count() {
         final String command = "SELECT COUNT(user_id) FROM \"user\"";
 
         try {
@@ -129,7 +129,7 @@ public class UserRepositoryJDBCImpl extends AbstractJDBCRepository implements Us
             return resultSet.getLong(1);
         } catch (SQLException ex) {
             Logger.getLogger(UserRepositoryJDBCImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 }
