@@ -25,7 +25,8 @@ public class Profile {
         this.user = user;
     }
 
-    public Profile(String firstName, String middleName, String lastName, String position, String company) {
+    public Profile(User user, String firstName, String middleName, String lastName, String position, String company) {
+        this.user = user;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;

@@ -1,8 +1,8 @@
 package br.com.paulorobertomartins.tsar.repository;
 
 import br.com.paulorobertomartins.tsar.model.User;
+import java.sql.SQLException;
 
-import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -31,30 +31,24 @@ public abstract class UserRepositoryBase {
     }
     
     @Before
-    public void setUp() {
-        User u = new User("paulo@email.com");
-        u.setUserId(1L);
-        u.setCreatedAt(new Date());
+    public void setUp() throws SQLException {
+        User u = new User(1L, "paulo@email.com");
         userRepository.create(u);
         System.out.println("User: " +  userRepository.findById(1L) );
         
         // Create user
-        u = new User("odezio@email.com");
-        u.setUserId(2L);
-        u.setCreatedAt(new Date());
+        u = new User(2L, "odezio@email.com");
         userRepository.create(u);
         System.out.println("User: " +  userRepository.findById(2L) );
 
         // Create user
-        u = new User("tiago@email.com");
-        u.setUserId(3L);
-        u.setCreatedAt(new Date());
+        u = new User(3L, "tiago@email.com");
         userRepository.create(u);
         System.out.println("User: " +  userRepository.findById(3L) );
     }
     
     @After
-    public void tearDown() {    
+    public void tearDown() throws SQLException {    
         User user = userRepository.findById(1L);
         if (user != null) {
             userRepository.delete(user);
@@ -73,11 +67,9 @@ public abstract class UserRepositoryBase {
      * Test of create method, of class UserRepositoryMemImpl.
      */
     @Test
-    public void testCreate() {
+    public void testCreate() throws SQLException {
         System.out.println("create");
-        User entity = new User("paulo.martins@email.com");
-        entity.setUserId(100L);
-        entity.setCreatedAt(new Date());
+        User entity = new User(100L, "paulo.martins@email.com");
         userRepository.create(entity);
         
         User newUser = userRepository.findById(100L);
@@ -88,9 +80,10 @@ public abstract class UserRepositoryBase {
 
     /**
      * Test of update method, of class UserRepositoryMemImpl.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws SQLException {
         System.out.println("update");
         User entity = userRepository.findById(1L);
         entity.setEmail("alterado@email.com");
@@ -102,9 +95,10 @@ public abstract class UserRepositoryBase {
 
     /**
      * Test of delete method, of class UserRepositoryMemImpl.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testDelete() {
+    public void testDelete() throws SQLException {
         System.out.println("delete");
         
         User entity = userRepository.findById(1L);
@@ -116,9 +110,10 @@ public abstract class UserRepositoryBase {
 
     /**
      * Test of deleteById method, of class UserRepositoryMemImpl.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testDeleteById() {
+    public void testDeleteById() throws SQLException {
         System.out.println("deleteById");
         
         userRepository.deleteById(1L);
@@ -129,16 +124,16 @@ public abstract class UserRepositoryBase {
 
     /**
      * Test of exists method, of class UserRepositoryMemImpl.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testExists() {
+    public void testExists() throws SQLException {
         System.out.println("exists");
         
         User entity = userRepository.findById(1L);
         assertEquals(true, userRepository.exists(entity));
         
-        User user = new User("nao@existe.com");
-        user.setUserId(999L);
+        User user = new User(999L, "nao@existe.com");
         assertEquals(false, userRepository.exists(user));
     }
 
@@ -146,7 +141,7 @@ public abstract class UserRepositoryBase {
      * Test of findById method, of class UserRepositoryMemImpl.
      */
     @Test
-    public void testFindById() {
+    public void testFindById() throws SQLException {
         System.out.println("findById");
 
         Long id = 1L;
@@ -160,9 +155,10 @@ public abstract class UserRepositoryBase {
 
     /**
      * Test of listAll method, of class UserRepositoryMemImpl.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testListAll() {
+    public void testListAll() throws SQLException {
         System.out.println("listAll");
         List<User> result = userRepository.listAll();
         assertEquals(3, result.size());
@@ -170,9 +166,10 @@ public abstract class UserRepositoryBase {
 
     /**
      * Test of count method, of class UserRepositoryMemImpl.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testCount() {
+    public void testCount() throws SQLException {
         System.out.println("count");
         assertEquals(3, userRepository.count());
     }

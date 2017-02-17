@@ -20,8 +20,10 @@ public class User {
     public User() {
     }
 
-    public User(String email) {
+    public User(Long userId, String email) {
+        this.userId = userId;
         this.email = email;
+        this.createdAt = new Date();
     }
 
     public Long getUserId() {

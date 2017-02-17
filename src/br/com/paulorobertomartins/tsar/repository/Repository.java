@@ -1,5 +1,6 @@
 package br.com.paulorobertomartins.tsar.repository;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -10,12 +11,12 @@ import java.util.List;
  */
 public interface Repository<T, ID> {
 
-    public void create(T entity);
-    public void update(T entity);
-    public void delete(T entity);
-    public void deleteById(ID id);
-    public boolean exists(T entity);
-    public T findById(ID id);
-    public List<T> listAll();
-    public long count();
+    public void create(T entity) throws SQLException;
+    public void update(T entity) throws SQLException;
+    public void delete(T entity) throws SQLException;
+    public void deleteById(ID id) throws SQLException;
+    public boolean exists(T entity) throws SQLException;
+    public T findById(ID id) throws SQLException;
+    public List<T> listAll() throws SQLException;
+    public long count() throws SQLException;
 }
